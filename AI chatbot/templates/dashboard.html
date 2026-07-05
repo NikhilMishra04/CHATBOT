@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Chat History</h2>
+
+<table border="1">
+
+<tr>
+<th>User</th>
+<th>Bot</th>
+</tr>
+
+{% for chat in chats %}
+
+<tr>
+
+<td>{{ chat[0] }}</td>
+
+<td>{{ chat[1] }}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</body>
+</html>

@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>AI College Assistant</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    height:100vh;
+    background:linear-gradient(
+    135deg,
+    #0f172a,
+    #1e3a8a,
+    #0f172a
+    );
+
+    overflow:hidden;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    transition:0.5s;
+}
+
+/* 🌙 LIGHT MODE */
+
+.light-mode{
+
+    background:linear-gradient(
+    135deg,
+    #e2e8f0,
+    #cbd5e1,
+    #f8fafc
+    );
+}
+
+.light-mode .chat-container{
+    background:rgba(255,255,255,0.8);
+    color:black;
+}
+
+.light-mode .header{
+    background:rgba(255,255,255,0.3);
+    color:black;
+}
+
+.light-mode .bot{
+    background:#cbd5e1;
+    color:black;
+}
+
+.light-mode input{
+    background:#e2e8f0;
+    color:black;
+}
+
+.light-mode .top-buttons a,
+.light-mode .top-buttons button{
+    background:#cbd5e1;
+    color:black;
+}
+
+/* 🔥 BACKGROUND EFFECTS */
+
+.circle1,
+.circle2{
+
+    position:absolute;
+
+    border-radius:50%;
+
+    filter:blur(120px);
+}
+
+.circle1{
+
+    width:300px;
+    height:300px;
+
+    background:#3b82f6;
+
+    top:-100px;
+    left:-100px;
+}
+
+.circle2{
+
+    width:300px;
+    height:300px;
+
+    background:#9333ea;
+
+    bottom:-100px;
+    right:-100px;
+}
+
+/* 💬 CHAT CONTAINER */
+
+.chat-container{
+
+    width:95%;
+    max-width:430px;
+
+    height:95vh;
+
+    background:rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(20px);
+
+    border-radius:25px;
+
+    overflow:hidden;
+
+    display:flex;
+
+    flex-direction:column;
+
+    border:1px solid rgba(255,255,255,0.1);
+
+    box-shadow:0 0 40px rgba(0,0,0,0.4);
+
+    z-index:10;
+}
+
+/* 🔥 HEADER */
+
+.header{
+
+    background:rgba(255,255,255,0.05);
+
+    padding:18px;
+
+    text-align:center;
+
+    font-size:22px;
+
+    font-weight:600;
+
+    color:white;
+
+    border-bottom:1px solid rgba(255,255,255,0.1);
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+}
+
+.header button{
+
+    background:#334155;
+
+    border:none;
+
+    color:white;
+
+    padding:8px 12px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+}
+
+/* 🔥 TOP BUTTONS */
+
+.top-buttons{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    padding:10px 15px;
+
+    flex-wrap:wrap;
+
+    gap:10px;
+}
+
+.top-buttons a,
+.top-buttons button{
+
+    text-decoration:none;
+
+    background:#334155;
+
+    color:white;
+
+    padding:8px 12px;
+
+    border-radius:10px;
+
+    font-size:14px;
+
+    border:none;
+
+    cursor:pointer;
+
+    transition:0.3s;
+}
+
+.top-buttons a:hover,
+.top-buttons button:hover{
+
+    transform:scale(1.05);
+}
+
+/* 💬 CHAT AREA */
+
+.messages{
+
+    flex:1;
+
+    overflow-y:auto;
+
+    padding:15px;
+}
+
+.messages::-webkit-scrollbar{
+
+    width:5px;
+}
+
+.messages::-webkit-scrollbar-thumb{
+
+    background:#3b82f6;
+
+    border-radius:10px;
+}
+
+/* 🔥 CHAT BUBBLES */
+
+.user,
+.bot{
+
+    max-width:80%;
+
+    padding:12px 15px;
+
+    margin:10px 0;
+
+    border-radius:18px;
+
+    animation:fadeIn 0.3s ease;
+
+    word-wrap:break-word;
+}
+
+.user{
+
+    background:#3b82f6;
+
+    color:white;
+
+    margin-left:auto;
+
+    border-bottom-right-radius:5px;
+}
+
+.bot{
+
+    background:rgba(255,255,255,0.1);
+
+    color:white;
+
+    border-bottom-left-radius:5px;
+}
+
+/* ✨ ANIMATION */
+
+@keyframes fadeIn{
+
+    from{
+        opacity:0;
+        transform:translateY(10px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* 🔥 INPUT AREA */
+
+.input-area{
+
+    display:flex;
+
+    padding:15px;
+
+    background:rgba(255,255,255,0.05);
+
+    border-top:1px solid rgba(255,255,255,0.1);
+
+    flex-wrap:wrap;
+}
+
+.input-area input{
+
+    flex:1;
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:14px;
+
+    outline:none;
+
+    background:rgba(255,255,255,0.1);
+
+    color:white;
+
+    font-size:15px;
+}
+
+.input-area input::placeholder{
+
+    color:#cbd5e1;
+}
+
+.input-area button{
+
+    margin-left:8px;
+
+    margin-top:5px;
+
+    border:none;
+
+    border-radius:12px;
+
+    padding:12px 15px;
+
+    background:#3b82f6;
+
+    color:white;
+
+    cursor:pointer;
+
+    transition:0.3s;
+
+    font-size:16px;
+}
+
+.input-area button:hover{
+
+    background:#2563eb;
+
+    transform:scale(1.05);
+}
+
+/* 🔥 FOOTER */
+
+.footer{
+
+    text-align:center;
+
+    font-size:12px;
+
+    color:#cbd5e1;
+
+    padding:8px;
+}
+
+/* 📱 MOBILE */
+
+@media(max-width:600px){
+
+    .chat-container{
+
+        width:100%;
+        height:100vh;
+        border-radius:0;
+    }
+
+    .user,
+    .bot{
+
+        max-width:90%;
+        font-size:14px;
+    }
+
+}
+/* 🔥 TYPING ANIMATION */
+
+.typing{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:5px;
+}
+
+.typing span{
+
+    width:8px;
+    height:8px;
+
+    background:white;
+
+    border-radius:50%;
+
+    animation:bounce 1s infinite;
+}
+
+.typing span:nth-child(2){
+
+    animation-delay:0.2s;
+}
+
+.typing span:nth-child(3){
+
+    animation-delay:0.4s;
+}
+
+/* ✨ BUTTON GLOW */
+
+button:hover{
+
+    box-shadow:0 0 15px
+    rgba(59,130,246,0.7);
+}
+
+@keyframes bounce{
+
+    0%,100%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-5px);
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="circle1"></div>
+<div class="circle2"></div>
+
+<div class="chat-container">
+
+    <!-- 🔥 HEADER -->
+
+    <div class="header">
+
+        🤖 AI College Assistant
+
+        <button onclick="toggleTheme()">
+            🌙
+        </button>
+
+    </div>
+
+    <!-- 🔥 TOP BUTTONS -->
+
+    <div class="top-buttons">
+
+        <a href="/dashboard">
+            📊 Dashboard
+        </a>
+
+        <button onclick="clearChat()">
+            🗑 Clear Chat
+        </button>
+
+        <a href="/logout">
+            🚪 Logout
+        </a>
+
+    </div>
+
+    <!-- 💬 CHAT -->
+
+    <div class="messages" id="chat">
+
+     <div class="bot">
+
+    👋 Hello! I am your AI College Assistant.
+
+    <br><br>
+
+    💡 Quick Suggestions:
+
+    <br><br>
+
+    ✅ Fees of IIT Delhi
+    <br>
+
+    ✅ Placement of VIT
+    <br>
+
+    ✅ Hostel in AKTU
+    <br>
+
+    ✅ Best AI college
+    <br>
+
+    ✅ Budget colleges
+    <br>
+
+    ✅ AI/ML career guidance
+
+</div>
+
+    </div>
+
+    <!-- 🔥 INPUT -->
+
+    <div class="input-area">
+
+        <input
+        type="text"
+        id="msg"
+        placeholder="Ask something...">
+
+        <!-- SEND -->
+
+        <button onclick="sendMessage()">
+            ➤
+        </button>
+
+        <!-- VOICE INPUT -->
+
+        <button onclick="startVoice()">
+            🎤
+        </button>
+
+        <!-- STOP VOICE -->
+
+        <button onclick="stopVoice()">
+            🛑
+        </button>
+
+    </div>
+
+    <!-- 🔥 FOOTER -->
+
+    <div class="footer">
+        Developed using Flask + AI/ML
+    </div>
+
+</div>
+
+<script>
+
+// 🌙 THEME TOGGLE
+
+function toggleTheme(){
+
+    document.body.classList.toggle(
+        "light-mode"
+    );
+
+}
+
+// 🕒 TIME
+
+function getTime(){
+
+    let now = new Date();
+
+    return now.toLocaleTimeString([],{
+        hour:'2-digit',
+        minute:'2-digit'
+    });
+
+}
+
+// 🔊 IMPROVED VOICE
+
+let currentSpeech = null;
+
+function speak(text){
+
+    // 🛑 Stop old voice
+
+    speechSynthesis.cancel();
+
+    currentSpeech =
+    new SpeechSynthesisUtterance(text);
+
+    currentSpeech.lang = "en-IN";
+
+    currentSpeech.rate = 1;
+
+    currentSpeech.pitch = 1;
+
+    currentSpeech.volume = 1;
+
+    currentSpeech.onend = function(){
+
+        currentSpeech = null;
+
+    };
+
+    speechSynthesis.speak(currentSpeech);
+
+}
+
+// 🛑 STOP VOICE
+
+function stopVoice(){
+
+    speechSynthesis.cancel();
+
+    currentSpeech = null;
+
+}
+
+// 🎤 VOICE INPUT
+
+function startVoice(){
+
+    if(!('webkitSpeechRecognition'
+    in window)){
+
+        alert(
+            "Voice recognition not supported"
+        );
+
+        return;
+    }
+
+    let recognition =
+    new webkitSpeechRecognition();
+
+    recognition.lang = "en-IN";
+
+    recognition.continuous = false;
+
+    recognition.interimResults = false;
+
+    recognition.start();
+
+    recognition.onresult = function(event){
+
+        let transcript =
+        event.results[0][0].transcript;
+
+        document.getElementById("msg")
+        .value = transcript;
+
+        sendMessage();
+
+    };
+
+    recognition.onerror = function(event){
+
+        alert(
+            "Microphone Error: " +
+            event.error
+        );
+
+    };
+
+}
+
+// 🗑 CLEAR CHAT
+
+function clearChat(){
+
+    if(confirm(
+        "Clear all chat messages?"
+    )){
+
+        document.getElementById("chat")
+        .innerHTML = `
+
+        <div class="bot">
+
+            👋 Chat cleared successfully.
+
+            <br><br>
+
+            💡 Try asking:
+
+            <br><br>
+
+            • Fees of IIT Delhi
+            <br>
+
+            • Placement of VIT
+            <br>
+
+            • Best AI college
+
+        </div>
+
+        `;
+
+    }
+
+}
+
+// 💬 SEND MESSAGE
+
+function sendMessage(){
+
+    // 🛑 Stop previous voice
+
+    speechSynthesis.cancel();
+
+    let msg =
+    document.getElementById("msg")
+    .value;
+
+    if(msg.trim() === "")
+        return;
+
+    let chat =
+    document.getElementById("chat");
+
+    // 👤 USER MESSAGE
+
+    chat.innerHTML += `
+        <div class="user">
+
+            ${msg}
+
+            <br><br>
+
+            <small>
+                ${getTime()}
+            </small>
+
+        </div>
+    `;
+
+    chat.scrollTop =
+    chat.scrollHeight;
+
+    // 🤖 TYPING
+
+    let typingDiv =
+    document.createElement("div");
+
+    typingDiv.className = "bot";
+
+    typingDiv.innerHTML = `
+
+   <div class="typing">
+
+    🤖 Typing
+
+    <span></span>
+    <span></span>
+    <span></span>
+
+    </div>
+
+        `   ;
+
+    chat.appendChild(typingDiv);
+
+    fetch("/get",{
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":
+            "application/x-www-form-urlencoded"
+        },
+
+        body:"msg="+
+        encodeURIComponent(msg)
+
+    })
+
+    .then(res=>res.text())
+
+    .then(data=>{
+
+        typingDiv.remove();
+
+        // 🤖 BOT MESSAGE
+
+        chat.innerHTML += `
+            <div class="bot">
+
+                ${data}
+
+                <br><br>
+
+                <small>
+                    ${getTime()}
+                </small>
+
+            </div>
+        `;
+
+        chat.scrollTop =
+        chat.scrollHeight;
+
+        // 🔊 SPEAK
+
+        speak(data);
+
+    });
+
+    // 🧹 CLEAR INPUT
+
+    document.getElementById("msg")
+    .value = "";
+
+}
+
+// ⌨️ ENTER KEY
+
+document.getElementById("msg")
+.addEventListener("keypress",
+function(e){
+
+    if(e.key === "Enter"){
+
+        sendMessage();
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>
